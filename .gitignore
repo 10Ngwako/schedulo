@@ -1,0 +1,14 @@
+# .NET
+bin/
+obj/
+
+# EF / DB
+*.db
+*.db-shm
+*.db-wal
+
+# VS Code
+.vscode/
+
+# User secrets
+appsettings.Development.json
