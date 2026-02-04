@@ -1,0 +1,52 @@
+@page
+@model Schedulo.Pages.Dashboard.IndexModel
+
+<h1 class="mb-4">📊 Dashboard</h1>
+
+<h3 class="text-danger">🔥 Overdue</h3>
+
+@if (!Model.Overdue.Any())
+{
+    <p class="text-muted">No overdue assignments 🎉</p>
+}
+else
+{
+    <ul class="list-group mb-4">
+        @foreach (var a in Model.Overdue)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <strong>@a.Title</strong>
+                    <div class="text-muted">
+                        @a.Course?.Code • Due @a.DueDate.ToShortDateString()
+                    </div>
+                </div>
+                <span class="badge bg-danger">Overdue</span>
+            </li>
+        }
+    </ul>
+}
+
+<h3 class="text-warning">⏰ Due Soon</h3>
+
+@if (!Model.Upcoming.Any())
+{
+    <p class="text-muted">Nothing due in the next 7 days 👌</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var a in Model.Upcoming)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <strong>@a.Title</strong>
+                    <div class="text-muted">
+                        @a.Course?.Code • Due @a.DueDate.ToShortDateString()
+                    </div>
+                </div>
+                <span class="badge bg-warning text-dark">@a.Priority</span>
+            </li>
+        }
+    </ul>
+}

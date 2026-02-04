@@ -1,0 +1,51 @@
+@page
+@model Schedulo.Pages.Assignments.IndexModel
+
+<h1 class="mb-4">📝 Assignments</h1>
+
+<!-- Create Form -->
+<div class="card mb-4 p-3">
+    <h5>Create New Assignment</h5>
+    <form id="assignmentForm">
+        <div class="mb-2">
+            <input type="text" id="title" placeholder="Title" class="form-control" required />
+        </div>
+        <div class="mb-2">
+            <select id="courseId" class="form-select" required>
+                <option value="">Select Course</option>
+                @foreach (var c in Model.Courses)
+                {
+                    <option value="@c.Id">@c.Code - @c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="mb-2">
+            <input type="date" id="dueDate" class="form-control" required />
+        </div>
+        <div class="mb-2">
+            <select id="priority" class="form-select" required>
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Assignment</button>
+    </form>
+</div>
+
+<!-- Assignments List -->
+<ul class="list-group" id="assignmentsList">
+    @foreach (var a in Model.Assignments)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@a.Id">
+            <div>
+                <strong>@a.Title</strong> • @a.Course?.Code • Due @a.DueDate.ToShortDateString()
+            </div>
+            <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+        </li>
+    }
+</ul>
+
+@section Scripts {
+    <script src="~/js/assignments.js"></script>
+}
