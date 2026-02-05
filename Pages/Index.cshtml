@@ -1,10 +1,37 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Schedulo | Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container text-center mt-5">
+    <h1 class="display-3 fw-bold">Welcome to <span class="text-primary">Schedulo</span></h1>
+    <p class="lead mt-3">
+        Your all-in-one academic planner — organize classes, track assignments,
+        manage deadlines, and stay on top of your student life.
+    </p>
+
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg me-2" href="/Schedule">
+            Get Started
+        </a>
+        <a class="btn btn-outline-secondary btn-lg" href="/About">
+            Learn More
+        </a>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <h4>📅 Plan Smarter</h4>
+            <p>Create schedules that actually work for you.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>📚 Track Academics</h4>
+            <p>Assignments, exams, and deadlines — all in one place.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>🎯 Stay Focused</h4>
+            <p>Reduce stress and never miss an important date.</p>
+        </div>
+    </div>
 </div>
