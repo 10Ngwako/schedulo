@@ -1,52 +1,83 @@
 @page
 @model Schedulo.Pages.Dashboard.IndexModel
-
-<h1 class="mb-4">📊 Dashboard</h1>
-
-<h3 class="text-danger">🔥 Overdue</h3>
-
-@if (!Model.Overdue.Any())
-{
-    <p class="text-muted">No overdue assignments 🎉</p>
+@{
+    ViewData["Title"] = "Schedulo | Dashboard";
 }
-else
-{
-    <ul class="list-group mb-4">
-        @foreach (var a in Model.Overdue)
-        {
-            <li class="list-group-item d-flex justify-content-between">
-                <div>
-                    <strong>@a.Title</strong>
-                    <div class="text-muted">
-                        @a.Course?.Code • Due @a.DueDate.ToShortDateString()
-                    </div>
-                </div>
-                <span class="badge bg-danger">Overdue</span>
-            </li>
+
+<div class="container mt-4">
+
+    <h2 class="fw-semibold mb-4">📊 Dashboard</h2>
+
+    <div class="row g-4">
+
+        <!-- Overdue -->
+        <div class="col-md-6">
+            <div class="border rounded p-3 h-100">
+                <h6 class="text-primary fw-semibold mb-3">🔥 Overdue</h6>
+                <ul class="list-group list-group-flush" id="overdueList"></ul>
+                <p class="text-muted small mt-2" id="overdueEmpty">No overdue assignments 🎉</p>
+            </div>
+        </div>
+
+        <!-- Due Soon -->
+        <div class="col-md-6">
+            <div class="border rounded p-3 h-100">
+                <h6 class="text-primary fw-semibold mb-3">⏰ Due Soon</h6>
+                <ul class="list-group list-group-flush" id="upcomingList"></ul>
+                <p class="text-muted small mt-2" id="upcomingEmpty">Nothing due in the next 7 days 👌</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function renderDashboard() {
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const overdueList = document.getElementById('overdueList');
+    const upcomingList = document.getElementById('upcomingList');
+    const overdueEmpty = document.getElementById('overdueEmpty');
+    const upcomingEmpty = document.getElementById('upcomingEmpty');
+
+    overdueList.innerHTML = '';
+    upcomingList.innerHTML = '';
+
+    const today = new Date();
+    let hasOverdue = false;
+    let hasUpcoming = false;
+
+    assignments.forEach(a => {
+        const due = new Date(a.dueDate);
+        const li = document.createElement('li');
+        li.className = 'list-group-item px-0 d-flex justify-content-between align-items-start';
+        li.innerHTML = `
+            <div>
+                <div class="fw-semibold">${a.title}</div>
+                <div class="text-muted small">${a.courseCode} • Due ${due.toLocaleDateString()}</div>
+            </div>
+            <span class="badge ${due < today ? 'bg-danger' : 'bg-warning text-dark'}">
+                ${due < today ? 'Overdue' : a.priority}
+            </span>
+        `;
+
+        if (due < today) {
+            overdueList.appendChild(li);
+            hasOverdue = true;
+        } else if ((due - today)/(1000*60*60*24) <= 7) {
+            upcomingList.appendChild(li);
+            hasUpcoming = true;
         }
-    </ul>
+    });
+
+    overdueEmpty.style.display = hasOverdue ? 'none' : 'block';
+    upcomingEmpty.style.display = hasUpcoming ? 'none' : 'block';
 }
 
-<h3 class="text-warning">⏰ Due Soon</h3>
+// Initial render
+renderDashboard();
 
-@if (!Model.Upcoming.Any())
-{
-    <p class="text-muted">Nothing due in the next 7 days 👌</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var a in Model.Upcoming)
-        {
-            <li class="list-group-item d-flex justify-content-between">
-                <div>
-                    <strong>@a.Title</strong>
-                    <div class="text-muted">
-                        @a.Course?.Code • Due @a.DueDate.ToShortDateString()
-                    </div>
-                </div>
-                <span class="badge bg-warning text-dark">@a.Priority</span>
-            </li>
-        }
-    </ul>
+// Optional: update dashboard live when assignments change
+window.addEventListener('storage', renderDashboard);
+</script>
 }
